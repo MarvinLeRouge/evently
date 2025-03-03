@@ -13,8 +13,24 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model User {
-    id    Int    @id @default(autoincrement())
-    name  String
-    email String @unique
+model Event {
+    id         String   @id @default(uuid()) // UUID comme identifiant
+    name       String
+    desc       String
+    picture    String
+    address    Json // Stockage GeoJSON avec un objet de type "Point" pour lat et lon
+    start_at   DateTime
+    end_at     DateTime
+    created_at DateTime @default(now()) // Date de création automatique
+    updated_at DateTime @updatedAt // Date de modification automatique
+    photos     Photo[] // Relation un-à-plusieurs avec le modèle Photo
+}
+
+model Photo {
+    id          String   @id @default(uuid()) // UUID comme identifiant
+    event_id    String  // Clé étrangère vers Event
+    url         String  // URL de l'image sur Cloudinary
+    desc        String? // Description optionnelle
+    uploaded_at DateTime @default(now()) // Date de téléchargement automatique
+    event       Event    @relation(fields: [event_id], references: [id]) // Relation vers Event
 }
