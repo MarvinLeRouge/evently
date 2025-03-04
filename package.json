@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@heroui/react": "^2.7.4",
@@ -31,8 +32,4 @@
     "tsx": "^4.19.3",
     "typescript": "^5"
   },
-  "prisma": {
-		"seed": "tsx prisma/seed.ts"
-	},
-  "postinstall": "prisma generate"
 }
