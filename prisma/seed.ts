@@ -8,7 +8,7 @@ async function main() {
     // Liste des festivals métal
     const festivals = [
         {
-            name: 'Hellfest',
+            name: 'Hellfest15h39',
             desc: 'Le Hellfest est l\'un des plus grands festivals de métal en Europe, situé en France.',
             picture: 'https://res.cloudinary.com/dol2iveps/image/upload/w_1000,c_fill,ar_1:1,g_auto,r_max,bo_5px_solid_red,b_rgb:262c35/v1741016569/hellfest-2024_iy0bfz.webp',
             address: {
