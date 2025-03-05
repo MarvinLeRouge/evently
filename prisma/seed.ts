@@ -1,10 +1,18 @@
 import { PrismaClient } from '@prisma/client';
+import fs from "fs"
+import path from "path"
+import cloudinary from "cloudinary"
+
+cloudinary.v2.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+export default cloudinary
 
 const prisma = new PrismaClient();
 
 async function main() {
-    await prisma.event.deleteMany();
-
     // Liste des festivals métal
     const festivals = [
         {
@@ -118,15 +126,71 @@ async function main() {
             end_at: new Date('2025-08-09T23:59:59'),
         },
     ];
+    const nbEvents = festivals.length
+    const picturesDir = path.join(__dirname, "../../evently-pictures");
+    const files = fs.readdirSync(picturesDir);
+    const pictureFiles = files.filter(file => /^photo_0\d+_.+\.jpg$/.test(file));
+    const nbPictures = pictureFiles.length
+    const nbExistingEvents = await prisma.event.count();
+    const nbExistingPictures = await prisma.picture.count();
+    if ((nbEvents == nbExistingEvents) && (nbPictures == nbExistingPictures)) {
+        console.log(`Skipping seeding : events and pictures already exist.`);
+        return; // If events already exist, exit the seeding process
+    }
+    const uploadToCloudinary = async (filePath: string) => {
+        try {
+            const uploadResponse = await cloudinary.v2.uploader.upload(filePath, {
+                folder: 'evently/pictures',  // Optional: specify a folder in Cloudinary
+            });
+            return uploadResponse.secure_url;  // The URL of the uploaded image
+        } catch (error) {
+            console.error('Error uploading to Cloudinary:', error);
+            return null;
+        }
+    };
+    await prisma.picture.deleteMany()
+    await prisma.event.deleteMany();
 
     // Insérer les événements dans la base de données
-    for (const festival of festivals) {
-        await prisma.event.create({
+    let nbEventsSeeded = 0
+    for (let i = 0; i < nbEvents; i++) {
+        const festival = festivals[i]
+        console.log(festival)
+        // Create event with pictures attached
+        const event = await prisma.event.create({
             data: festival,
         });
+        if(event) {
+            nbEventsSeeded++
+        }
+        const eventId = event.id
+        // Get pictures
+        const festivalPictures = pictureFiles.filter(file => file.startsWith(`photo_0${i}`))
+        console.log(festivalPictures)
+        // Upload them
+        const nbPicturesForEvent = festivalPictures.length
+        let nbPicturesUploaded = 0
+        let nbPicturesSeeded = 0
+        for (let pictureFile of festivalPictures) {
+            const filePath = path.join(picturesDir, pictureFile);
+            const imageUrl = await uploadToCloudinary(filePath);
+            nbPicturesUploaded++;
+            if (imageUrl) {
+                const picture = await prisma.picture.create({
+                    data : {
+                        "event_id": eventId,
+                        "url": imageUrl
+                    }
+                })
+                if(picture) {
+                    nbPicturesSeeded++;
+                }
+            }
+        }
+        console.log(`Inserted event: ${event.name} with ${nbPicturesUploaded} pictures uploaded and ${nbPicturesSeeded} pictures seeded.`);
     }
 
-    console.log('10 événements ont été insérés dans la base de données !');
+    console.log(`${nbEventsSeeded}/${nbEvents} événements ont été insérés dans la base de données !`);
 }
 
 main()
