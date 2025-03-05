@@ -1,4 +1,3 @@
-import React from "react";
 import { PrismaClient, Event } from "@prisma/client";
 
 const prisma = new PrismaClient();
@@ -9,7 +8,7 @@ const getEventById = async (id: string): Promise<Event | null> => {
     });
 };
 
-export default async function EventDetailPage({ params }: { params: { id: string } }) {
+export default async function EventDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params
     const event = await getEventById(id);
 

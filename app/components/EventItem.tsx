@@ -1,4 +1,3 @@
-import React from "react";
 import { Event } from "@prisma/client";
 import Link from "next/link";
 
