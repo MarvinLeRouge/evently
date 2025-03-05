@@ -27,9 +27,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
             <p className="text-gray-500">
                 {new Date(event.start_at).toLocaleString()} - {new Date(event.end_at).toLocaleString()}
             </p>
-            <PicturesList pictures={event.pictures} event={event} />
-
-
+            {event.pictures && <PicturesList pictures={event.pictures} event={event} />}
         </div>
     );
 }
