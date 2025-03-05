@@ -1,4 +1,3 @@
-import React from "react";
 import EventItem from "./EventItem";
 import { Event } from "@prisma/client";
 
