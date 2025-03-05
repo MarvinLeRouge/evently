@@ -6,7 +6,11 @@ const prisma = new PrismaClient();
 
 
 const getEvents = async (): Promise<Event[]> => {
-    const events = await prisma.event.findMany();
+    const events = await prisma.event.findMany({
+        include: {
+            pictures: true
+        }
+    });
     console.log(events)
 
     return events

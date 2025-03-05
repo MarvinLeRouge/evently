@@ -1,16 +1,21 @@
-import { PrismaClient, Event } from "@prisma/client";
+import PicturesList from "@/app/components/PicturesList";
+import { PrismaClient, Event, Picture } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const getEventById = async (id: string): Promise<Event | null> => {
+const getEventById = async (id: string): Promise<Event & { pictures: Picture[]} | null> => {
     return await prisma.event.findUnique({
         where: { id },
+        include: {
+            pictures: true
+        }
     });
 };
 
 export default async function EventDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params
     const event = await getEventById(id);
+    console.log(event)
 
     if (!event) return <p>Event not found</p>;
 
@@ -22,6 +27,9 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
             <p className="text-gray-500">
                 {new Date(event.start_at).toLocaleString()} - {new Date(event.end_at).toLocaleString()}
             </p>
+            <PicturesList pictures={event.pictures} event={event} />
+
+
         </div>
     );
 }
