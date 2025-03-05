@@ -23,10 +23,10 @@ model Event {
     end_at     DateTime
     created_at DateTime @default(now()) // Date de création automatique
     updated_at DateTime @updatedAt // Date de modification automatique
-    photos     Photo[] // Relation un-à-plusieurs avec le modèle Photo
+    pictures   Picture[] // Relation un-à-plusieurs avec le modèle Photo
 }
 
-model Photo {
+model Picture {
     id          String   @id @default(uuid()) // UUID comme identifiant
     event_id    String  // Clé étrangère vers Event
     url         String  // URL de l'image sur Cloudinary
