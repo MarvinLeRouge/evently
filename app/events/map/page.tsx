@@ -1,15 +1,8 @@
-import { PrismaClient, Event } from "@prisma/client";
-import LeafletMap from "@/app/components/LeafletMap";
-  
+import { PrismaClient } from "@prisma/client";
+import { EventWithGeoJSON } from "@/app/interfaces/Geojson";
+import LeafletMapWrapper from "@/app/components/map/LeafletMapWrapper";
 const prisma = new PrismaClient();
 
-interface GeoJSONPoint {
-    type: "Point";
-    coordinates: [number, number]; // [latitude, longitude]
-}
-type EventWithGeoJSON = Omit<Event, 'address'> & {
-    address: GeoJSONPoint;
-};
 
 const getEvents = async (): Promise<EventWithGeoJSON[]> => {
     const events = await prisma.event.findMany({});
@@ -25,7 +18,7 @@ export default async function EventsMapPage() {
     return (
         <div>
             <h1 className="text-3xl font-bold mb-6">Events Map</h1>
-            <LeafletMap events={events} />
+            <LeafletMapWrapper events={events} />
         </div>
     );
 };

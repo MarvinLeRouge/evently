@@ -1,4 +1,4 @@
-import EventItem from "./EventItem";
+import EventItem from "@/app/components/events/EventItem";
 import { Event } from "@prisma/client";
 
 const EventsList = ({ events }: { events: Event[] }) => {
