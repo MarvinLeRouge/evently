@@ -21,7 +21,7 @@ async function main() {
             picture: 'https://res.cloudinary.com/dol2iveps/image/upload/w_1000,c_fill,ar_1:1,g_auto,r_max,bo_5px_solid_red,b_rgb:262c35/v1741016569/hellfest-2024_iy0bfz.webp',
             address: {
                 type: 'Point',
-                coordinates: [1.559, 47.211], // Coordonnées géographiques (exemple pour Clisson, France)
+                coordinates: [-1.27015, 47.09719], // Coordonnées géographiques (exemple pour Clisson, France)
             },
             start_at: new Date('2025-06-20T12:00:00'),
             end_at: new Date('2025-06-22T23:59:59'),

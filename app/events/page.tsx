@@ -1,5 +1,5 @@
 import React from "react";
-import EventsList from "../components/EventsList";
+import EventsList from "../components/events/EventsList";
 import { PrismaClient, Event } from "@prisma/client";
 
 const prisma = new PrismaClient();

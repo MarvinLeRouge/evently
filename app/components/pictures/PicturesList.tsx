@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import PictureItem from "./PictureItem";
+import PictureItem from "@/app/components/pictures/PictureItem";
 import { Event, Picture } from "@prisma/client";
 
 const PAGE_SIZE = 6;

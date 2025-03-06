@@ -1,4 +1,4 @@
-import PicturesList from "@/app/components/PicturesList";
+import PicturesList from "@/app/components/pictures/PicturesList";
 import { PrismaClient, Event, Picture } from "@prisma/client";
 
 const prisma = new PrismaClient();
